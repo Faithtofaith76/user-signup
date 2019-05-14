@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, render_template
 import cgi
 import os
 import jinja2
@@ -11,20 +11,20 @@ app.config['DEBUG'] = True
 
 @app.route("/")
 def index():
-    template = jinja_env.get_template('index.html')
-    return template.render()
+
+    return render_template('index.html')
 
 def length(parameter):
-    if len(parameter)> 2 and len(parameter)<21:
+    if len(parameter)> 3 and len(parameter)<21:
         return True
     else:
         return False
 
 def symbol(parameter):
-    if parameter.count("@") == 1 and parameter.count(".") ==1 :
-        return True
-    else:
-        return False
+   if parameter.count("@") == 1 and parameter.count(".") ==1:
+       return True
+   else:
+       return False
 
 # Check for spaces in function, returning True if there are no spaces
 def no_space(parameter):
@@ -59,13 +59,12 @@ def validation():
     if valid_username=="" and valid_password=="" and valid_email=="":
         return redirect('/welcome?username='+username)
     else:
-        template = jinja_env.get_template('index.html')
-        return template.render(valid_username=valid_username, valid_password=valid_password, valid_email = valid_email)
+        return render_template('index.html', valid_username = valid_username, valid_password = valid_password, 
+        valid_email = valid_email, username = username, email = email)
         
 @app.route('/welcome')
 def welcome_form():   
-    template = jinja_env.get_template('welcome.html')
     username=request.args.get('username')
-    return template.render(username = username)
+    return render_template('welcome.html', username = username)
 
 app.run()
